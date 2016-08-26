@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 19 17:45:49 2015
+
+@author: Dongzhe Li
+"""
+
+
+from numpy import * 
+import scipy as sp 
+from pandas import * 
+import pandas.rpy.common as com 
+from rpy2.robjects.packages import importr 
+import rpy2.robjects as robj 
+import rpy2.rinterface as rint 
+import rpy2.robjects.vectors as rvec 
+
+print(11)
+print(robj.r('mean(mtcars[,1])'))
+print(robj.r('sd(mtcars[,1])'))
+robj.r('x<-subset(mtcars, subset=mpg>20)')
+print(robj.r('nrow(x)'))
+robj.r('y<-which(x$cyl==4)')
+print(robj.r('length(x[y,])'))
+robj.r('z<-x[,2]')
+print(robj.r('length(z[z>=8])'))
+print("YES")

@@ -1,0 +1,71 @@
+Vendor,Big Data Revenue,Total Revenue,Big Data Revenue as pct of Total Revenue,pct Big Data Hardware Revenue,pct Big Data Software Revenue,pct Big Data Services Revenue
+ IBM,1352,103930,1,22,33,44
+ HP,664,119895,1,34,29,38
+ Teradata,435,2665,16,31,28,41
+ Dell,425,59878,1,83,0,17
+ Oracle,415,39463,1,25,34,41
+ SAP,368,21707,2,0,67,33
+ EMC,336,23570,1,24,36,39
+ Cisco Systems,214,47983,0,80,0,20
+ Microsoft,196,71474,0,0,67,33
+ Accenture,194,29770,1,0,0,100
+ Fusion-io,190,439,43,71,0,29
+ PwC,189,31500,1,0,0,100
+ SAS Institute,187,2954,6,0,59,41
+ Splunk,186,186,100,0,71,29
+ Deloitte,173,31300,1,0,0,100
+ Amazon,170,56825,0,0,0,100
+ NetApp,138,6454,2,77,0,23
+ Hitachi,130,112318,0,0,0,100
+ Opera Solutions,118,118,100,0,0,100
+ Mu Sigma,114,114,100,0,0,100
+ TCS,82,10170,1,0,0,100
+ Palantir,78,78,100,0,63,38
+ Intel,76,53341,0,83,0,17
+ MarkLogic,69,78,88,0,63,38
+ Booz Allen Hamilton,68,5802,1,0,0,100
+ Cloudera,61,61,100,0,47,53
+ Actian,46,46,100,0,63,38
+ SGI,43,769,6,83,0,17
+ Capgemini,42,14020,0,0,0,100
+ 1010data,37,37,100,0,0,100
+ 10gen,36,36,100,0,42,58
+ Google,36,50175,0,0,0,100
+ Alteryx,36,36,100,0,55,45
+ Guavus,35,35,100,0,67,33
+ VMware,32,3676,1,0,71,29
+ ParAccel,24,24,100,0,44,56
+ TIBCO Software,24,1024,2,0,53,47
+ MapR,23,23,100,0,51,49
+ Attivio,21,26,80,0,62,38
+ Fractal Analytics,20,20,100,0,0,100
+ Pervasive Software,19,51,37,0,59,41
+ Hortonworks,18,18,100,0,0,100
+ Informatica,17,812,2,0,78,22
+ QlikTech,16,321,5,0,74,26
+ DataStax,15,15,100,0,59,41
+ Basho,14,14,100,0,63,38
+ Microstrategy,13,595,2,0,59,41
+ Tableau Software,13,130,10,0,59,41
+ Couchbase,12,12,100,0,64,36
+ Kognitio,12,12,100,0,47,53
+ Datameer,11,11,100,0,79,21
+ Rackspace,11,1300,1,0,0,100
+ LucidWorks,10,10,100,0,58,42
+ Digital Reasoning,10,10,100,0,51,49
+ Aerospike,8.8,8.8,100,0,80,20
+ Neo Technology,8.5,8.5,100,0,62,38
+ Think Big Analytics,7.9,7.9,100,0,0,100
+ Calpont,7.6,7.6,100,0,59,41
+ RainStor,7.5,7.5,100,0,67,33
+ SiSense,7.3,7.3,100,0,41,59
+ Revolution Analytics,7.2,13,56,0,56,44
+ Talend,6.2,51,12,0,80,20
+ Jaspersoft,6.2,31,20,0,62,38
+ Juniper Networks,6.1,4365,0,71,0,29
+ Pentaho,6.1,31,19,0,62,38
+ DDN,5.9,278,2,63,0,38
+ Actuate,4.6,137,3,0,63,37
+ Original Device Manufacturers,2375,100000,2,100,0,0
+ Other,1593,197170,1,29,22,49
+ Total,11448,1223373,1,40,21,39

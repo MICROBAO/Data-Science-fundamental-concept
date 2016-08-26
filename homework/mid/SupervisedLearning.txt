@@ -1,0 +1,139 @@
+#------------------------------------------------------------------------------
+#
+# SUPERVISED LEARNING is a common data mining process for developing a classifier
+# (learning a function y = f(x)) from a dataset of examples {(x_i,y_i) | 1<=i<=n},
+# where the x-values are "attributes" or "feature values" (for "independent variables"),
+# and the y-values are "classifications" or "labels" (for a "dependent variable").
+#
+# In order to validate that the results are good, the dataset is often broken into
+# two subsets -- a training set and a testing set.  After constructing a model with
+# only the training set, we can validate how well the model works by checking its
+# predictions for correctness on the testing data set.
+#
+# This script gives a simple R implementation of supervised learning for the iris dataset,
+# using the LDA (Linear Discriminant Analysis) model generator available in the MASS package.
+#
+# See e.g.:  http://en.wikipedia.org/wiki/Supervised_learning
+#
+#------------------------------------------------------------------------------
+
+data(iris)           #  load the iris dataset (provided as a standard dataset in R)
+
+colnames(iris)       #  display the names of columns in the iris dataset
+
+dim(iris)            #  display the number of rows and columns
+
+str(iris)            #  display the structure of the iris 'data.frame'
+
+iris[1:5,]           #  display the first 5 rows of the iris dataset
+
+summary(iris)        #  statistically summarize each column
+
+
+table(iris$Species)  #  tabulate the number of occurrences of each iris species
+
+attach(iris)         #  include the iris column names in our namespace/environment
+
+table(Species)       #  equivalent to the above; we can now omit the 'iris$' prefix
+
+
+#------------------------------------------------------------------------------
+#   visually exploring the iris dataset
+#------------------------------------------------------------------------------
+
+RGB = c("red","green","blue")
+
+species_numbers = unclass(Species)     #  map Species names to Species numbers in 1:3
+iris_colors = RGB[ species_numbers ]   #  produce a list of colors (by species) for iris observations
+pairs(iris, col=iris_colors, pch=20)   #  produce pairwise scatterplots of numeric iris columns
+
+iris_matrix = data.matrix(iris)        #  convert the iris dataset to a numeric matrix
+iris_colors = RGB[ iris_matrix[,5] ]   #  produce a list of colors for the 3 classes (species)
+pairs(iris, col=iris_colors, pch=20)   #  produce pairwise scatterplots of all iris columns
+
+
+#------------------------------------------------------------------------------
+#   generate a training set, and create a model on the training set
+#------------------------------------------------------------------------------
+
+n <- dim(iris)[1]    #  n = number of rows
+p <- dim(iris)[2]    #  p = number of columns
+
+iris_ids <- (1:n)
+
+training_set <- sample(iris_ids, n/2)     # Generate a random sample of size 75
+training_set
+
+testing_set  <- iris_ids[-training_set]  # The set complement of training_set
+testing_set
+
+
+table(Species)                  # equivalent to the table() command above
+table(Species[training_set])    # Tabulate species for the training set
+table(Species[testing_set])     # Tabulate species for the testing set
+
+
+#------------------------------------------------------------------------------
+#   generate a model with the LDA package
+#------------------------------------------------------------------------------
+
+#  install.packages("MASS")  # install the MASS package if you don't have it
+
+library(MASS)  #  get the lda() function, and the parcoord() function
+
+#  plot the data as a parallel coordinates plot
+
+parcoord(iris[,1:4],  col=c("red", "green3", "blue")[unclass(iris$Species)])
+
+#  fit an LDA model to the data
+
+ldaModel <- lda( Species ~ Petal.Length + Petal.Width + Sepal.Length + Sepal.Width,
+                 subset = training_set )
+ldaModel
+
+# see also:  example(lda)
+
+#------------------------------------------------------------------------------
+# find out how well the model predicts the remaining data (testing_set)
+#------------------------------------------------------------------------------
+
+predictions <- predict( ldaModel, iris[ testing_set ,] )
+predictions$class
+
+incorrect.prediction  <-  (predictions$class != Species[testing_set])
+testing_set[ incorrect.prediction ]          # ids  for which prediction was incorrect
+iris[ testing_set[incorrect.prediction], ]   # data for which prediction was incorrect
+
+confusion_matrix <- table( Species[testing_set], predictions$class )
+confusion_matrix
+
+m <- length(testing_set)
+m
+
+accuracy <- (m - sum(incorrect.prediction))/m
+accuracy
+
+
+#------------------------------------------------------------------------------
+#  test the model on the entire data set
+#------------------------------------------------------------------------------
+
+predictions <- predict( ldaModel, iris )
+predictions$class
+
+incorrect.prediction  <-  (predictions$class != Species)
+iris_ids[ incorrect.prediction ] # ids  for which prediction was incorrect
+iris[ incorrect.prediction , ]   # data for which prediction was incorrect
+
+accuracy <- (n - sum(incorrect.prediction))/n
+accuracy
+
+confusion_matrix <- table( Species, predictions$class )
+confusion_matrix
+
+
+#------------------------------------------------------------------------------
+#  detach the iris namespace
+#------------------------------------------------------------------------------
+
+detach(iris)  # remove iris column names from the current environment/namespace

@@ -1,0 +1,29 @@
+# install.packages("Lahman")
+library(Lahman)
+
+summary(Batting)
+summary(Master)
+summary(Salaries)
+
+BattingStats = battingStats()
+summary(BattingStats)
+
+## A glossary for Baseball Statistics Acronyms is in:  http://en.wikipedia.org/wiki/Baseball_statistics
+
+MaxSalary = aggregate( salary ~ playerID, Salaries, max)
+
+NamesOfBattingStatistics = c( colnames(Batting)[8:17], colnames(BattingStats)[25:31] )
+RecentBatting = BattingStats[ BattingStats[,"yearID"]>1980, c("playerID",NamesOfBattingStatistics)]
+RecentMaster = Master[ Master[,"birthYear"]>1960,
+c("playerID","nameFirst","nameLast","hofID","weight","height","bats","throws")]
+RecentMaster$hofID = (RecentMaster$hofID != "")*1
+colnames( RecentMaster ) = gsub("hofID", "hallOfFame", colnames(RecentMaster))
+
+TotalBatting = aggregate( cbind(AB,R,H,X2B,X3B,HR,RBI,SB,CS,BB,BA,PA,TB,SlugPct,OBP,OPS,BABIP) ~ playerID, RecentBatting, sum)
+
+BattingTable = merge(RecentMaster,TotalBatting, by="playerID")
+
+Baseball = merge(BattingTable, MaxSalary, by="playerID")
+NumericBaseball = Baseball[,c("hallOfFame","weight","height",NamesOfBattingStatistics,"salary")]
+
+SalaryModel = lm( log10(salary) ~ AB+R+H+X2B+X3B+HR+RBI+SB+CS+BB+BA+PA+SlugPct+OBP+BABIP, Baseball)

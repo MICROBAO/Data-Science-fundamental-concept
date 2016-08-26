@@ -1,0 +1,50 @@
+#install.packages("Lahman","googleVis")
+# from the manual for the "Lahman" package in R:
+
+library(Lahman)
+
+data(Teams)
+
+# subset on a few variables
+teams <- subset(Teams, lgID %in% c("AL", "NL"))
+teams <- subset(teams, yearID>1900)
+
+# drop some variables
+teams <- subset(teams, select=-c(Ghome,divID,DivWin:WSWin,name,park,teamIDBR:teamIDretro))
+teams <- subset(teams, select=-c(HBP,CS,BPF,PPF))
+
+# subset to remove infrequent teams
+tcount <- table(teams$teamID)
+teams <- subset(teams, teams$teamID %in% names(tcount)[tcount>15], drop=TRUE)
+teams$teamID <- factor(teams$teamID, levels=names(tcount)[tcount>15])
+
+# relevel lgID
+teams$lgID <- factor(teams$lgID, levels= c("AL", "NL"))
+# create new variables
+teams <- within(teams, {
+       WinPct = W / G    ## Winning percentage
+       })
+
+library(lattice)
+xyplot(attendance/1000 ~ WinPct | as.factor(yearID), groups=lgID, data=subset(teams, yearID>1980),
+    pch=20, cex=0.5, type=c("p", "r"), col=c("red","blue"))
+
+library(googleVis)
+if(require(googleVis)) {
+    motion1 <- gvisMotionChart(teams, idvar='teamID', timevar='yearID',
+    chartid="gvisTeams", options=list(width=700, height=600))
+    plot(motion1)
+    #print(motion1, file="gvisTeams.html")
+    #### merge with ave salary, for those years where salary is available
+    avesal <- aggregate(salary ~ yearID + teamID, data=Salaries, FUN=mean)
+    # salary data just starts after 1980
+    teamsSal <- subset(teams, yearID>=1980)
+    # add salary to team data
+    teamsSal <- merge(teamsSal,
+                     avesal[,c("yearID", "teamID", "salary")],
+                     by=c("yearID", "teamID"), all.x=TRUE)
+    motion2 <- gvisMotionChart(teamsSal, idvar='teamID', timevar='yearID',
+      xvar="attendance", yvar="salary", sizevar="WinPct",
+    chartid="gvisTeamsSal", options=list(width=700, height=600))
+    plot(motion2)
+    # print(motion2, file="gvisTeamsSal.html")

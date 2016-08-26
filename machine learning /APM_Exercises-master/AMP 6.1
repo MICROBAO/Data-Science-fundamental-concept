@@ -1,0 +1,84 @@
+#
+# Multiple training routines EPage 82
+# Problem EPage 129
+# 
+# Written by:
+# -- 
+# John L. Weatherwax                2009-04-21
+# 
+# email: wax@alum.mit.edu
+# 
+# Please send comments and especially bug reports to the
+# above email address.
+# 
+#-----
+
+save_plots = F
+
+library(caret) 
+
+set.seed(0)
+
+data(tecator) 
+
+# Part (b):
+#
+pr = prcomp( absorp )
+
+vars = pr$sdev^2
+total_var = sum(vars)
+
+if( save_plots ){ postscript("../../WriteUp/Graphics/Chapter6/chap_6_prob_1_scree_plot.eps", onefile=FALSE, horizontal=FALSE) }
+plot( ( vars/total_var ) * 100, xlim=c(0,40), type='b', pch=16, xlab='number of components', ylab='percent of total variation' )
+grid()
+if( save_plots ){ dev.off() }
+
+# Part (c):
+# 
+fat = endpoints[,2]
+
+# For various models build and then compare performance:
+#
+set.seed(0)
+lm_model = train( absorp, fat, method="lm", preProcess=c("center","scale"), trControl=trainControl(method="repeatedcv",repeats=5) )
+
+# For rlm we cannot have a singular predictor covariance matrix thus we preprocess with PCA:
+# 
+set.seed(0)
+rlm_model = train( absorp, fat, method="rlm", preProcess=c("pca"), trControl=trainControl(method="repeatedcv",repeats=5) )
+
+set.seed(0)
+pls_model = train( absorp, fat, method="pls",
+                   # the default tuning grid evaluates comonents 1 ... tuneLength
+                   tuneLength=40, 
+                   preProcess=c("center","scale"), trControl=trainControl(method="repeatedcv",repeats=5) )
+
+# Ridge regression training:
+#
+if( FALSE ){ 
+  ridgeGrid = data.frame(.lambda=seq(0,1,length=20))
+  set.seed(0)
+  ridge_model = train( absorp, fat, method="ridge",
+                       # fit the model over many penalty values
+                       tuneGrid = ridgeGrid,
+                       preProcess=c("center","scale"), trControl=trainControl(method="repeatedcv",repeats=5) )
+}
+
+# Elastic net training:
+# 
+enetGrid = expand.grid(.lambda=seq(0,1,length=20), .fraction=seq(0.05, 1.0, length=20))
+set.seed(0)
+enet_model = train( absorp, fat, method="enet",
+                    # fit the model over many penalty values
+                    tuneGrid = enetGrid,
+                    preProcess=c("center","scale"), trControl=trainControl(method="repeatedcv",repeats=5) )
+
+# EPage 82 
+resamp = resamples( list(lm=lm_model,rlm=rlm_model,pls=pls_model,enet=enet_model) )
+print( summary(resamp) )
+
+if( save_plots ){ postscript("../../WriteUp/Graphics/Chapter6/chap_6_prob_1_resamp_dotplot.eps", onefile=FALSE, horizontal=FALSE) }
+dotplot( resamp, metric="RMSE" )
+if( save_plots ){ dev.off() }
+
+print( summary(diff(resamp)) )

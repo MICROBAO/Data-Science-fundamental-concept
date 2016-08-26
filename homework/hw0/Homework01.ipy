@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 09 22:08:19 2015
+
+@author: Dongzhe Li
+"""
+
+import rpy2.robjects as robj
+
+print(robj.r('''(1 + 1/20)^10'''))
+print(robj.r('''20 %% 3''')) # %% means mod
+print(robj.r('''20%/%3''')) # %/% means integer division
+print(robj.r('''pi''')) # pi value is predefined in R
+print(robj.r('''sin(pi/6)'''))
+print(robj.r('''exp(1)''')) # e^1 is 2.718282...
+
+robj.r('''x<-10''')
+print(robj.r('''1 + 2/x + 1/(x^2)'''))
+print(robj.r('''seq(from = 1, to = 11, by = 2)'''))
+print(robj.r('''seq(1,11,2)'''))
+print(robj.r('''seq(from = 1, to = 11, by = 2) == seq(1,11,2)'''))
+print(robj.r('''rep( 2 , 5 )'''))
+
+print(robj.r('''10:20'''))
+robj.r('''x<-10:20''')
+print(robj.r('''x[1] + x[5]''')) # R's index starts from 1
+robj.r('''index <- c(-1,-2,-3)''')
+print(robj.r('''x[ index ]''')) # What does this mean?
+print(robj.r('''length(x)'''))
+print(robj.r('''c(1,2,3,4) * c(1,2,3,4)''')) # elementwise algebraic operations
+print(robj.r('''c(1,2,3,4) + c(1,2,3,4)'''))
+print(robj.r('''sqrt( c(1,2,3,4) * c(1,2,3,4) )'''))
